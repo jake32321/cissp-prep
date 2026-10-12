@@ -1,0 +1,115 @@
+:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #1d1d1f;
+  --muted: #5f6368;
+  --accent: #1a5fb4;
+  --error: #b3261e;
+  --border: #d0d4d9;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16181c;
+    --fg: #e8eaed;
+    --muted: #9aa0a6;
+    --accent: #8ab4f8;
+    --error: #f2b8b5;
+    --border: #3c4043;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+a {
+  color: var(--accent);
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand {
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--fg);
+}
+
+main {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.error {
+  color: var(--error);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 24rem;
+}
+
+.stack label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+input {
+  font: inherit;
+  padding: 0.5rem 0.625rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--bg);
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+form.inline {
+  display: inline;
+}
+
+button.link {
+  padding: 0;
+  background: none;
+  color: var(--accent);
+  text-decoration: underline;
+}

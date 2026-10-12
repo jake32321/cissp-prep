@@ -1,0 +1,72 @@
+[package]
+name = "cissp-prep"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+leptos = "0.8"
+leptos_meta = "0.8"
+leptos_router = "0.8"
+serde = { version = "1", features = ["derive"] }
+thiserror = "2"
+
+# Browser (hydrate) only
+console_error_panic_hook = { version = "0.1", optional = true }
+wasm-bindgen = { version = "0.2", optional = true }
+
+# Server (ssr) only
+argon2 = { version = "0.5", features = ["std"], optional = true }
+axum = { version = "0.8", optional = true }
+leptos_axum = { version = "0.8", optional = true }
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio", "sqlite", "migrate", "macros"], optional = true }
+tokio = { version = "1", features = ["rt-multi-thread", "macros"], optional = true }
+tower-sessions = { version = "0.14", optional = true }
+tower-sessions-sqlx-store = { version = "0.15", features = ["sqlite"], optional = true }
+tracing = { version = "0.1", optional = true }
+tracing-subscriber = { version = "0.3", features = ["env-filter"], optional = true }
+
+[features]
+hydrate = ["leptos/hydrate", "dep:console_error_panic_hook", "dep:wasm-bindgen"]
+ssr = [
+    "dep:argon2",
+    "dep:axum",
+    "dep:leptos_axum",
+    "dep:sqlx",
+    "dep:tokio",
+    "dep:tower-sessions",
+    "dep:tower-sessions-sqlx-store",
+    "dep:tracing",
+    "dep:tracing-subscriber",
+    "leptos/ssr",
+    "leptos_meta/ssr",
+    "leptos_router/ssr",
+]
+
+# Small, fast WebAssembly bundle for release builds.
+[profile.wasm-release]
+inherits = "release"
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[package.metadata.leptos]
+output-name = "cissp-prep"
+site-root = "target/site"
+site-pkg-dir = "pkg"
+style-file = "style/main.css"
+assets-dir = "public"
+site-addr = "127.0.0.1:3000"
+reload-port = 3001
+browserquery = "defaults"
+env = "DEV"
+bin-features = ["ssr"]
+bin-default-features = false
+lib-features = ["hydrate"]
+lib-default-features = false
+lib-profile-release = "wasm-release"
