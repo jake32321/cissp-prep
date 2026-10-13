@@ -28,3 +28,6 @@ rustc-ice-*.txt
 *.db
 *.db-shm
 *.db-wal
+
+# CI cargo home (GitLab)
+/.cargo/

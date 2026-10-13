@@ -1,0 +1,38 @@
+# Same checks as .github/workflows/ci.yml, for GitLab CI.
+
+image: rust:1-bookworm
+
+variables:
+  CARGO_HOME: $CI_PROJECT_DIR/.cargo
+  CARGO_TERM_COLOR: always
+  CARGO_LEPTOS_VERSION: 0.3.11
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+cache:
+  key:
+    files:
+      - Cargo.lock
+  paths:
+    - .cargo/registry/
+    - .cargo/git/
+    - target/
+
+check:
+  stage: test
+  before_script:
+    - rustup component add rustfmt clippy
+    - rustup target add wasm32-unknown-unknown
+    - mkdir -p "$CARGO_HOME/bin"
+    - curl -sSL "https://github.com/leptos-rs/cargo-leptos/releases/download/v${CARGO_LEPTOS_VERSION}/cargo-leptos-x86_64-unknown-linux-gnu.tar.gz"
+      | tar xz --strip-components=1 -C "$CARGO_HOME/bin" cargo-leptos-x86_64-unknown-linux-gnu/cargo-leptos
+    - export PATH="$CARGO_HOME/bin:$PATH"
+  script:
+    - cargo fmt --check
+    - cargo clippy --features ssr --all-targets -- -D warnings
+    - cargo clippy --lib --features hydrate --target wasm32-unknown-unknown -- -D warnings
+    - cargo test --features ssr
+    - cargo leptos build --release
